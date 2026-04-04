@@ -1,0 +1,83 @@
+﻿@model HopDong
+
+@{
+    ViewData["Title"] = "Tạo hợp đồng mới";
+    var tenantName = ViewBag.TenantName as string ?? "";
+    var tenantPhone = ViewBag.TenantPhone as string ?? "";
+}
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="p-8 bg-gray-50 min-h-screen">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+        <h2 class="text-2xl font-semibold mb-4">Tạo hợp đồng</h2>
+
+        <form asp-action="Create" method="post" class="space-y-4">
+            @Html.AntiForgeryToken()
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Mã hợp đồng</label>
+                <input asp-for="MaHopDong" class="mt-1 block w-full rounded-md border-gray-300 p-2" />
+                <span asp-validation-for="MaHopDong" class="text-sm text-red-600"></span>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Mã phòng</label>
+                <input asp-for="MaPhong" class="mt-1 block w-full rounded-md border-gray-300 p-2" />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">CCCD Người thuê</label>
+                <input asp-for="TenantCCCD" class="mt-1 block w-full rounded-md border-gray-300 p-2" />
+                <span asp-validation-for="TenantCCCD" class="text-sm text-red-600"></span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Họ và tên người thuê</label>
+                    <input name="tenantName" value="@tenantName" class="mt-1 block w-full rounded-md border-gray-300 p-2" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Số điện thoại</label>
+                    <input name="tenantPhone" value="@tenantPhone" class="mt-1 block w-full rounded-md border-gray-300 p-2" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Ngày bắt đầu</label>
+                    <input asp-for="NgayBatDau" type="date" class="mt-1 block w-full rounded-md border-gray-300 p-2" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Ngày kết thúc (tùy chọn)</label>
+                    <input asp-for="NgayKetThuc" type="date" class="mt-1 block w-full rounded-md border-gray-300 p-2" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Giá thuê/tháng</label>
+                    <input asp-for="GiaThueThang" type="number" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 p-2" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Tiền cọc</label>
+                    <input asp-for="TienCoc" type="number" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 p-2" />
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Trạng thái</label>
+                <input asp-for="TrangThai" class="mt-1 block w-full rounded-md border-gray-300 p-2" value="Đang thuê" />
+            </div>
+
+            <div class="flex space-x-2">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Lưu</button>
+                <a asp-action="Index" class="px-4 py-2 rounded border text-gray-700">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

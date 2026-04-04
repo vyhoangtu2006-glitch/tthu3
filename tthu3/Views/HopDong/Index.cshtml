@@ -1,0 +1,82 @@
+﻿@model IEnumerable<tthu3.Models.HopDongViewModel>
+
+@{
+    ViewData["Title"] = "Danh sách Hợp đồng";
+    var tenantFilter = ViewBag.TenantFilter as string;
+}
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="p-8 bg-gray-50 min-h-screen">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Hợp đồng</h1>
+            @if (!string.IsNullOrEmpty(tenantFilter))
+            {
+                <div class="text-sm text-gray-600">Hợp đồng của người thuê: <span class="font-medium">@tenantFilter</span></div>
+            }
+        </div>
+
+        @if (User?.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+        {
+            <a asp-controller="HopDong" asp-action="Create" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">+ Tạo hợp đồng</a>
+        }
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full leading-normal">
+            <thead>
+                <tr class="bg-gray-100 border-b text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th class="px-4 py-3">Mã HĐ</th>
+                    <th class="px-4 py-3">Mã Phòng</th>
+                    <th class="px-4 py-3">Họ &amp; Tên</th>
+                    <th class="px-4 py-3">SĐT</th>
+                    <th class="px-4 py-3">CCCD</th>
+                    <th class="px-4 py-3">Ngày bắt đầu</th>
+                    <th class="px-4 py-3">Ngày kết thúc</th>
+                    <th class="px-4 py-3">Giá thuê/tháng</th>
+                    <th class="px-4 py-3">Trạng thái</th>
+                    <th class="px-4 py-3">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null || !Model.Any())
+                {
+                    <tr><td class="px-4 py-4 text-sm text-gray-500" colspan="10">Không có hợp đồng.</td></tr>
+                }
+                else
+                {
+                    foreach (var vm in Model)
+                    {
+                        var h = vm.HopDong;
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="px-4 py-4 text-sm">@h.MaHopDong</td>
+                            <td class="px-4 py-4 text-sm">@h.MaPhong</td>
+                            <td class="px-4 py-4 text-sm">@vm.TenantName</td>
+                            <td class="px-4 py-4 text-sm">@vm.TenantPhone</td>
+                            <td class="px-4 py-4 text-sm">@h.TenantCCCD</td>
+                            <td class="px-4 py-4 text-sm">@h.NgayBatDau.ToString("yyyy-MM-dd")</td>
+                            <td class="px-4 py-4 text-sm">@((h.NgayKetThuc.HasValue) ? h.NgayKetThuc.Value.ToString("yyyy-MM-dd") : "-")</td>
+                            <td class="px-4 py-4 text-sm">@h.GiaThueThang.ToString("N0")</td>
+                            <td class="px-4 py-4 text-sm">@h.TrangThai</td>
+                            <td class="px-4 py-4 text-sm">
+                                <div class="flex items-center space-x-3">
+                                    <a asp-controller="HopDong" asp-action="Details" asp-route-id="@h.MaHopDong" class="text-gray-700 hover:text-gray-900">Xem</a>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a asp-controller="HopDong" asp-action="Edit" asp-route-id="@h.MaHopDong" class="text-blue-500 hover:text-blue-800">Sửa</a>
+                                        @if (!string.Equals(h.TrangThai, "Đã kết thúc", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <a asp-controller="HopDong" asp-action="End" asp-route-id="@h.MaHopDong" class="text-yellow-600 hover:text-yellow-800">Kết thúc</a>
+                                        }
+                                        <a asp-controller="HopDong" asp-action="Delete" asp-route-id="@h.MaHopDong" class="text-red-500 hover:text-red-700">Xóa</a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+﻿@model PhongTro
+
+@{
+    ViewData["Title"] = "Thêm Phòng Mới";
+}
+
+<div class="p-8 bg-gray-50 min-h-screen">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+        <h2 class="text-2xl font-semibold mb-4">Thêm Phòng Mới</h2>
+
+        @if (!ViewContext.ModelState.IsValid)
+        {
+            <div class="mb-4 text-red-600 text-sm">
+                @foreach (var err in ViewContext.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <div>@err.ErrorMessage</div>
+                }
+            </div>
+        }
+
+        <form asp-action="Create" method="post" class="space-y-4">
+            @Html.AntiForgeryToken()
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Mã Phòng</label>
+                <input asp-for="MaPhong" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" />
+                <span asp-validation-for="MaPhong" class="text-sm text-red-600"></span>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Tên Phòng</label>
+                <input asp-for="TenPhong" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Giá (VNĐ)</label>
+                <input asp-for="GiaPhong" type="number" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Diện Tích (m²)</label>
+                <input asp-for="DienTich" type="number" step="0.1" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2" />
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <input asp-for="DaChoThue" type="checkbox" class="h-4 w-4" />
+                <label class="text-sm text-gray-700">Đã cho thuê</label>
+            </div>
+
+            <div class="flex space-x-2">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Lưu</button>
+                <a asp-action="Index" class="px-4 py-2 rounded border text-gray-700">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

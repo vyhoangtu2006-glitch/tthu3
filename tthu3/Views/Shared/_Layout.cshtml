@@ -1,0 +1,101 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>@ViewData["Title"] - Quản lý Nhà Trọ</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <div class="flex h-screen">
+        <aside class="w-72 bg-white border-r border-gray-200 flex flex-col shadow-sm">
+            <div class="p-6 border-b border-gray-100">
+                <h1 class="text-2xl font-extrabold text-blue-600 flex items-center">
+                    <span class="mr-3">🏠</span>
+                    Smart<span class="text-gray-900">Inn</span>
+                </h1>
+            </div>
+
+            <nav class="flex-1 p-4 space-y-1">
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Chính</p>
+
+                <a asp-controller="Home" asp-action="Index"
+                   class="flex items-center px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "bg-blue-50 text-blue-600" : "")">
+                    <span class="w-6 mr-3">📊</span> Tổng quan
+                </a>
+
+                <a asp-controller="PhongTro" asp-action="Index"
+                   class="flex items-center px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all @(ViewContext.RouteData.Values["controller"]?.ToString() == "PhongTro" ? "bg-blue-50 text-blue-600" : "")">
+                    <span class="w-6 mr-3">🚪</span> Quản lý phòng
+                </a>
+
+                <a asp-controller="NguoiThue" asp-action="Index"
+                   class="flex items-center px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all @(ViewContext.RouteData.Values["controller"]?.ToString() == "NguoiThue" ? "bg-blue-50 text-blue-600" : "")">
+                    <span class="w-6 mr-3">👥</span> Người thuê
+                </a>
+
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mt-6 mb-2">Tài chính</p>
+
+                <a asp-controller="HoaDon" asp-action="Index"
+                   class="flex items-center px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "bg-blue-50 text-blue-600" : "")">
+                    <span class="w-6 mr-3">🧾</span> Hóa đơn dịch vụ
+                </a>
+
+                <a asp-controller="HopDong" asp-action="Index"
+                   class="flex items-center px-4 py-3 rounded-xl transition-all font-medium @(ViewContext.RouteData.Values["controller"]?.ToString() == "HopDong" ? "bg-blue-600 text-white shadow-md shadow-blue-200" : "text-gray-600 hover:bg-blue-50 hover:text-blue-600")">
+                    <span class="w-6 mr-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "HopDong" ? "text-white" : "")">📄</span> Hợp đồng thuê
+                </a>
+
+                <a asp-controller="ThanhToan" asp-action="Index"
+                   class="flex items-center px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 rounded-xl transition-all @(ViewContext.RouteData.Values["controller"]?.ToString() == "ThanhToan" ? "bg-blue-50 text-blue-600" : "")">
+                    <span class="w-6 mr-3">💳</span> Thanh toán
+                </a>
+
+                <div class="pt-10">
+                    <a asp-controller="ChiPhi" asp-action="Index"
+                       class="flex items-center px-4 py-3 text-gray-500 hover:text-gray-700 transition-all text-sm">
+                        <span class="w-6 mr-3">⚙️</span> Cài đặt hệ thống
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto bg-slate-50/50">
+            <header class="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center sticky top-0 z-10">
+                <h2 class="text-xl font-bold text-gray-800">@ViewData["Title"] ?? "Dashboard"</h2>
+
+                <div class="flex items-center space-x-6">
+                    <div class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM8 18a2 2 0 104 0H8z" /></svg>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] px-1 rounded-full border-2 border-white">3</span>
+                    </div>
+
+                    <div class="flex items-center space-x-3 border-l pl-6 border-gray-200">
+                        <span class="text-sm font-medium text-gray-700">Chào, <span class="font-bold">Quản trị viên</span></span>
+
+                        <form method="post" asp-controller="Account" asp-action="Logout" class="inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="bg-red-50 text-red-600 px-4 py-2 rounded-lg text-sm font-bold hover:bg-red-100 transition-colors">Đăng xuất</button>
+                        </form>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-8">
+                @if (TempData["Message"] != null)
+                {
+                    <div class="mb-4 p-3 rounded bg-green-50 border border-green-100 text-green-800">@TempData["Message"]</div>
+                }
+
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

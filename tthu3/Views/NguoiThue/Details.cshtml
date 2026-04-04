@@ -1,0 +1,25 @@
+﻿@model NguoiThue
+
+@{
+    ViewData["Title"] = "Chi tiết Người thuê";
+}
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="p-8 bg-gray-50 min-h-screen">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+        <h2 class="text-2xl font-semibold mb-4">Chi tiết người thuê</h2>
+
+        <dl class="grid grid-cols-1 gap-2">
+            <div><span class="font-semibold">Họ tên:</span> @Model.HoTen</div>
+            <div><span class="font-semibold">Số điện thoại:</span> @Model.SoDienThoai</div>
+            <div><span class="font-semibold">CCCD:</span> @Model.CCCD</div>
+            <div><span class="font-semibold">Địa chỉ:</span> @Model.DiaChi</div>
+        </dl>
+
+        <div class="mt-4">
+            <a asp-controller="NguoiThue" asp-action="Index" class="px-4 py-2 rounded border text-gray-700">Quay lại</a>
+            <a asp-controller="HopDong" asp-action="Index" asp-route-tenant="@Model.CCCD" class="ml-2 px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Xem hợp đồng</a>
+        </div>
+    </div>
+</div>

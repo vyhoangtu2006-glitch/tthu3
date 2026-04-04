@@ -1,0 +1,30 @@
+﻿@model HopDong
+
+@{
+    ViewData["Title"] = "Kết thúc hợp đồng";
+}
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="p-8 bg-gray-50 min-h-screen">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+        <h2 class="text-2xl font-semibold mb-4">Kết thúc hợp đồng @Model.MaHopDong</h2>
+
+        <p class="text-sm text-gray-700">Xác nhận kết thúc hợp đồng này. Bạn có thể chọn ngày kết thúc hoặc để trống để dùng ngày hiện tại.</p>
+
+        <form asp-action="End" method="post" class="space-y-4">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.MaHopDong" />
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Ngày kết thúc</label>
+                <input name="ngayKetThuc" type="date" class="mt-1 block w-full rounded-md border-gray-300 p-2" />
+            </div>
+
+            <div class="flex space-x-2">
+                <button type="submit" class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">Kết thúc</button>
+                <a asp-action="Index" class="px-4 py-2 rounded border text-gray-700">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>

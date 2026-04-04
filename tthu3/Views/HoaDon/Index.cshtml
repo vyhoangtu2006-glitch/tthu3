@@ -1,0 +1,91 @@
+﻿@model IEnumerable<tthu3.Models.HoaDon>
+
+@{
+    ViewData["Title"] = "Danh sách Hóa Đơn";
+
+    // Optional: controller can set ViewBag.GiaPhong, ViewBag.DonGiaDien, ViewBag.DonGiaNuoc
+    decimal giaPhongDefault = ViewBag.GiaPhong ?? 0m;
+    decimal donGiaDien = ViewBag.DonGiaDien ?? 3000m;
+    decimal donGiaNuoc = ViewBag.DonGiaNuoc ?? 20000m;
+}
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="p-8 bg-gray-50 min-h-screen">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Danh sách Hóa Đơn</h1>
+        <a href="/HoaDon/Create" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">
+            + Tạo Hóa Đơn Mới
+        </a>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full leading-normal">
+            <thead>
+                <tr class="bg-gray-100 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th class="px-5 py-3">Mã HĐ</th>
+                    <th class="px-5 py-3">Số điện cũ</th>
+                    <th class="px-5 py-3">Số điện mới</th>
+                    <th class="px-5 py-3">Tiêu thụ điện</th>
+                    <th class="px-5 py-3">Số nước cũ</th>
+                    <th class="px-5 py-3">Số nước mới</th>
+                    <th class="px-5 py-3">Tiêu thụ nước</th>
+                    <th class="px-5 py-3">Tổng tiền (VNĐ)</th>
+                    <th class="px-5 py-3">Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model == null || !Model.Any())
+                {
+                    <tr>
+                        <td class="px-5 py-5 text-sm text-gray-500" colspan="9">Không có hóa đơn nào.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        decimal tongTien = 0m;
+                        string error = null;
+                        try
+                        {
+                            tongTien = item.TinhTongTien(giaPhongDefault, donGiaDien, donGiaNuoc);
+                        }
+                        catch (Exception ex)
+                        {
+                            error = ex.Message;
+                        }
+
+                        <tr class="border-b border-gray-200 hover:bg-gray-50">
+                            <td class="px-5 py-5 text-sm">@item.MaHoaDon</td>
+                            <td class="px-5 py-5 text-sm">@item.SoDienCu</td>
+                            <td class="px-5 py-5 text-sm">@item.SoDienMoi</td>
+                            <td class="px-5 py-5 text-sm">@item.SoDienTieuThu</td>
+                            <td class="px-5 py-5 text-sm">@item.SoNuocCu</td>
+                            <td class="px-5 py-5 text-sm">@item.SoNuocMoi</td>
+                            <td class="px-5 py-5 text-sm">@item.SoNuocTieuThu</td>
+                            <td class="px-5 py-5 text-sm font-semibold">
+                                @if (error != null)
+                                {
+                                    <span class="text-red-600">Lỗi: @error</span>
+                                }
+                                else
+                                {
+                                    @tongTien.ToString("N0")
+                                }
+                            </td>
+                            <td class="px-5 py-5 text-sm space-x-3">
+                                <a asp-controller="HoaDon" asp-action="Edit" asp-route-id="@item.MaHoaDon" class="text-blue-500 hover:text-blue-800">Sửa</a>
+                                <a asp-controller="HoaDon" asp-action="Delete" asp-route-id="@item.MaHoaDon" class="text-red-500 hover:text-red-800">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4 text-sm text-gray-600">
+        <p>Đơn giá mặc định: Điện = @donGiaDien.ToString("N0") VNĐ / đơn vị, Nước = @donGiaNuoc.ToString("N0") VNĐ / đơn vị.</p>
+        <p>Ghi chú: truyền <code>ViewBag.GiaPhong</code>, <code>ViewBag.DonGiaDien</code>, <code>ViewBag.DonGiaNuoc</code> từ controller nếu cần giá khác.</p>
+    </div>
